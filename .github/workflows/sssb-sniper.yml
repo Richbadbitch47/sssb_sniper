@@ -55,7 +55,7 @@ jobs:
       - name: Check SSSB
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          SSSB_SEARCH_URL: https://minasidor.sssb.se/en/available-apartments/?actionId=&omraden=&oboTyper=&hyraMax=
+          SSSB_SEARCH_URL: https://minasidor.sssb.se/en/available-apartments/?actionId=&omraden=&oboTyper=&hyraMax=6000
           MIN_MOVE_IN: "2026-11-01"
           DATE_MODE: on_or_after
           SEND_ON_FIRST_RUN: "true"
