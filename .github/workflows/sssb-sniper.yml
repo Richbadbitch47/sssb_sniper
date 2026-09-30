@@ -61,7 +61,7 @@ jobs:
           SEND_ON_FIRST_RUN: "true"
           STATE_PATH: .sssb_seen.json
           MAX_PAGES: "1"
-        run: python sssb_sniper.py --once
+        run: python sssb_sniper.py --once --debug
 
       - name: Save seen listings
         run: |
