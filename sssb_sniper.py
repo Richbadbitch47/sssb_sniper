@@ -233,10 +233,11 @@ def parse_listing_date(value: Any) -> date | None:
 
 
 def listing_key(listing: dict[str, Any]) -> str:
-    for key in ("refid", "rsn", "objektId", "objektNr", "id", "detaljUrl"):
+    move_in = str(listing.get("inflyttningDatum") or listing.get("movingIn") or "")
+    for key in ("refid", "detaljUrl", "objektNr", "objektId", "id"):
         value = listing.get(key)
         if value:
-            return str(value)
+            return f"{value}_{move_in}"
     raw = json.dumps(listing, sort_keys=True, ensure_ascii=False)
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:16]
 
@@ -259,6 +260,12 @@ def normalize_listing(listing: dict[str, Any], config: Config) -> dict[str, Any]
     move_in_raw = listing.get("inflyttningDatum") or listing.get("movingIn") or listing.get("MovingIn")
     move_in = parse_listing_date(move_in_raw)
     if not matches_date(move_in, config):
+        return None
+
+    # 新增：提取数字租金并限制在 6000 SEK 以内
+    raw_rent = str(listing.get("hyra") or "")
+    rent_digits = re.sub(r"[^\d]", "", raw_rent)
+    if rent_digits and int(rent_digits) > 6000:
         return None
 
     title = listing.get("typ") or listing.get("title") or "SSSB listing"
